@@ -10,7 +10,6 @@ import {
 import { useState, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import operonLogo from "@/assets/operon-logo.png.asset.json";
 
 const NAV = [
   { to: "/", label: "Home" },
@@ -26,7 +25,7 @@ function Header() {
     <header className="sticky top-0 z-40 border-b border-rule bg-background/85 backdrop-blur">
       <div className="container-page flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-3">
-          <img src={operonLogo.url} alt="Operon Systems" className="h-11 w-auto object-contain" />
+          <img src="/operon-logo.svg" alt="Operon Systems" className="h-11 w-auto object-contain" />
           <span className="text-base font-semibold tracking-tight">Operon Systems</span>
         </Link>
 
@@ -100,7 +99,7 @@ function Footer() {
         <div className="grid gap-12 lg:grid-cols-4">
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3">
-              <img src={operonLogo.url} alt="Operon Systems" className="h-12 w-auto object-contain" />
+              <img src="/operon-logo.svg" alt="Operon Systems" className="h-12 w-auto object-contain" />
               <span className="text-base font-semibold tracking-tight">Operon Systems</span>
             </div>
             <p className="mt-4 max-w-md text-sm text-ink-soft">

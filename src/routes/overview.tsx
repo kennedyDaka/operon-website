@@ -67,8 +67,12 @@ function OverviewPage() {
             </dl>
           </div>
           <div className="hidden md:block">
-            {/* Photo placeholder — intentionally blank until a real image is provided */}
-            <div className="relative h-full min-h-[420px] border border-slate-200 bg-slate-100" />
+            <img
+              src="/overview-hero.jpg"
+              alt="Operon Systems"
+              className="h-full min-h-[420px] w-full object-cover"
+              loading="lazy"
+            />
           </div>
         </div>
       </section>

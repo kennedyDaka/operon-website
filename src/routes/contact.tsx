@@ -18,13 +18,13 @@ import { submitContactForm } from "@/lib/supabase";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Book a Consultation — Operon Systems" },
+      { title: "Book a Consultation" },
       {
         name: "description",
         content:
           "Tell us about your operations in a short guided consultation. Operon Systems will respond within one business day.",
       },
-      { property: "og:title", content: "Book a Consultation — Operon Systems" },
+      { property: "og:title", content: "Book a Consultation" },
       {
         property: "og:description",
         content: "A short guided consultation to scope your project.",
@@ -65,9 +65,9 @@ const INITIAL: FormState = {
 };
 
 const INDUSTRIES = [
-  "Logistics & Transport",
+  "Logistics and Transport",
   "Hospitality",
-  "Retail & Distribution",
+  "Retail and Distribution",
   "Manufacturing",
   "Financial Services",
   "Public Sector / NGO",
@@ -87,7 +87,7 @@ const CHALLENGES = [
   "Outdated ERP or legacy software",
   "New system from scratch",
   "Process automation",
-  "Not sure yet — exploring",
+  "Not sure yet, exploring",
 ];
 
 const TIMELINES = [
@@ -445,9 +445,9 @@ function ConfirmationScreen({ form }: { form: FormState }) {
     ["Challenge", form.challenge],
     ["Timeline", form.timeline],
     ["Name", form.name],
-    ["Organization", form.organization || "—"],
+    ["Organization", form.organization || "N/A"],
     ["Email", form.email],
-    ["Phone", form.phone || "—"],
+    ["Phone", form.phone || "N/A"],
   ];
 
   return (
@@ -500,7 +500,7 @@ function ConfirmationScreen({ form }: { form: FormState }) {
           {[
             "We review your answers and prepare a short scoping note.",
             "We email you within one business day to schedule a 30-minute call.",
-            "Together we agree on scope, timeline and next steps — no obligation.",
+            "Together we agree on scope, timeline and next steps, no obligation.",
           ].map((t, i) => (
             <li key={i} className="flex gap-4 text-sm text-slate-700">
               <span className="flex h-7 w-7 shrink-0 items-center justify-center border border-[#1f4e79] text-[11px] font-semibold text-[#1f4e79]">
@@ -517,7 +517,7 @@ function ConfirmationScreen({ form }: { form: FormState }) {
           Want a faster response?
         </h3>
         <p className="mt-2 text-sm text-white/75">
-          Send your summary to us on WhatsApp — the message is prefilled with
+          Send your summary to us on WhatsApp, the message is prefilled with
           your answers.
         </p>
         <a

@@ -4,13 +4,13 @@ import { SiteShell, PageHero } from "@/components/site-shell";
 export const Route = createFileRoute("/overview")({
   head: () => ({
     meta: [
-      { title: "Company Overview — Operon Systems" },
+      { title: "Company Overview" },
       {
         name: "description",
         content:
           "Operon Systems helps organizations modernize operations through customized software systems designed around real workflows.",
       },
-      { property: "og:title", content: "Company Overview — Operon Systems" },
+      { property: "og:title", content: "Company Overview" },
       {
         property: "og:description",
         content: "Who we are and what we do.",
@@ -26,7 +26,7 @@ function OverviewPage() {
       <PageHero
         eyebrow="Company Overview"
         title="Who We Are"
-        lede="Operon Systems helps organizations modernize operations through customized software systems designed around real workflows — not generic templates."
+        lede="Operon Systems helps organizations modernize operations through customized software systems designed around real workflows, not generic templates."
       />
       <section className="mx-auto max-w-[1280px] px-6 py-24 md:px-10">
         <div className="grid gap-16 md:grid-cols-2 md:gap-20">
@@ -45,8 +45,8 @@ function OverviewPage() {
                 systems that reflect how their business actually runs.
               </p>
               <p>
-                Every engagement begins with the workflow on the floor — in the
-                warehouse, the kitchen, the depot or the back office — and ends
+                Every engagement begins with the workflow on the floor, in the
+                warehouse, the kitchen, the depot or the back office, and ends
                 with software that earns its place in daily use.
               </p>
             </div>

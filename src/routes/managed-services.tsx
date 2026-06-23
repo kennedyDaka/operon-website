@@ -5,13 +5,13 @@ import { Cloud, Activity, DatabaseBackup, RefreshCw, LifeBuoy } from "lucide-rea
 export const Route = createFileRoute("/managed-services")({
   head: () => ({
     meta: [
-      { title: "Managed Services — Operon Systems" },
+      { title: "Managed Services" },
       {
         name: "description",
         content:
           "Hosting, monitoring, backups, updates and support for the systems we build.",
       },
-      { property: "og:title", content: "Managed Services — Operon Systems" },
+      { property: "og:title", content: "Managed Services" },
       { property: "og:description", content: "Operate with confidence." },
     ],
   }),

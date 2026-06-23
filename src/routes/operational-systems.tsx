@@ -5,13 +5,13 @@ import { Boxes, Warehouse, Truck, ScanBarcode, BarChart3 } from "lucide-react";
 export const Route = createFileRoute("/operational-systems")({
   head: () => ({
     meta: [
-      { title: "Operational Systems — Operon Systems" },
+      { title: "Operational Systems" },
       {
         name: "description",
         content:
-          "Custom operational systems built around real workflows — inventory, warehouse, fleet, POS and reporting.",
+          "Custom operational systems built around real workflows: inventory, warehouse, fleet, POS and reporting.",
       },
-      { property: "og:title", content: "Operational Systems — Operon Systems" },
+      { property: "og:title", content: "Operational Systems" },
       { property: "og:description", content: "Software built around your workflows." },
     ],
   }),
@@ -31,7 +31,7 @@ function OpSystemsPage() {
     <SiteShell>
       <PageHero
         eyebrow="Operational Systems"
-        title="Custom systems built around workflows — not generic software."
+        title="Custom systems built around workflows, not generic software."
         lede="Generic ERP forces your team to adapt. We build the inverse: systems shaped by how your operation already runs, then standardized for scale."
       />
       <section className="mx-auto max-w-[1280px] px-6 py-24 md:px-10">

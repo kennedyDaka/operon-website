@@ -24,7 +24,7 @@ const PILLARS = [
   {
     n: "01",
     title: "Built Around Workflows",
-    body: "We start with how your team actually works — not a product roadmap.",
+    body: "We start with how your team actually works, not a product roadmap.",
   },
   {
     n: "02",

@@ -3,11 +3,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Operon Systems — Operational Systems & ERP Modernization" },
+      { title: "Operon Systems" },
       {
         name: "description",
         content:
-          "Operon Systems helps organizations in Malawi modernize operations through practical technology — workflow digitization and ERP modernization.",
+          "Operon Systems helps organizations in Malawi modernize operations through practical technology, workflow digitization and ERP modernization.",
       },
       { property: "og:title", content: "Operon Systems" },
       {

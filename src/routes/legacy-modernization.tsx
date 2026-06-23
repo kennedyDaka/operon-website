@@ -4,13 +4,13 @@ import { SiteShell, PageHero } from "@/components/site-shell";
 export const Route = createFileRoute("/legacy-modernization")({
   head: () => ({
     meta: [
-      { title: "Legacy System Modernization — Operon Systems" },
+      { title: "Legacy System Modernization" },
       {
         name: "description",
         content:
           "Rebuild outdated software, migrate existing data and expand systems to support new departments and operations.",
       },
-      { property: "og:title", content: "Legacy System Modernization — Operon Systems" },
+      { property: "og:title", content: "Legacy System Modernization" },
       { property: "og:description", content: "Outgrown your current system?" },
     ],
   }),
@@ -39,7 +39,7 @@ function LegacyPage() {
       <PageHero
         eyebrow="Legacy System Modernization"
         title="Outgrown Your Current System?"
-        lede="We rebuild outdated software, migrate existing data and extend systems to support new departments, branches and operations — without disrupting the business in flight."
+        lede="We rebuild outdated software, migrate existing data and extend systems to support new departments, branches and operations without disrupting the business in flight."
       />
 
       <section className="mx-auto max-w-[1280px] px-6 py-24 md:px-10">

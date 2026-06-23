@@ -5,13 +5,13 @@ import { Boxes, Workflow, RefreshCw, Server } from "lucide-react";
 export const Route = createFileRoute("/services")({
   head: () => ({
     meta: [
-      { title: "Services — Operon Systems" },
+      { title: "Services" },
       {
         name: "description",
         content:
           "Operational systems, workflow digitization, legacy modernization and managed services.",
       },
-      { property: "og:title", content: "Services — Operon Systems" },
+      { property: "og:title", content: "Services" },
       {
         property: "og:description",
         content: "Four practice areas built around operations.",
@@ -54,7 +54,7 @@ function ServicesPage() {
       <PageHero
         eyebrow="Services"
         title="Four practice areas, one operating philosophy."
-        lede="We design, build and operate the systems that run day-to-day operations — from the warehouse floor to the back office."
+        lede="We design, build and operate the systems that run day-to-day operations, from the warehouse floor to the back office."
       />
       <section className="mx-auto max-w-[1280px] px-6 py-24 md:px-10">
         <div className="grid gap-px bg-slate-200 md:grid-cols-2">

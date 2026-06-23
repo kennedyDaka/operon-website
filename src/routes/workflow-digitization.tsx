@@ -5,13 +5,13 @@ import { ChevronRight } from "lucide-react";
 export const Route = createFileRoute("/workflow-digitization")({
   head: () => ({
     meta: [
-      { title: "Workflow Digitization — Operon Systems" },
+      { title: "Workflow Digitization" },
       {
         name: "description",
         content:
           "Application, recruitment, admissions, approvals and onboarding systems that replace paper and email.",
       },
-      { property: "og:title", content: "Workflow Digitization — Operon Systems" },
+      { property: "og:title", content: "Workflow Digitization" },
       { property: "og:description", content: "Move workflows off paper, email and spreadsheets." },
     ],
   }),
@@ -38,7 +38,7 @@ function WorkflowPage() {
       <PageHero
         eyebrow="Workflow Digitization"
         title="From paper, email and spreadsheets to a single auditable flow."
-        lede="We rebuild the operational processes that touch the most people — applications, approvals and onboarding — as systems your team actually wants to use."
+        lede="We rebuild the operational processes that touch the most people, applications, approvals and onboarding, as systems your team actually wants to use."
       />
 
       <section className="mx-auto max-w-[1280px] px-6 py-20 md:px-10">

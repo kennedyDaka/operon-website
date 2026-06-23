@@ -4,13 +4,13 @@ import { SiteShell, PageHero } from "@/components/site-shell";
 export const Route = createFileRoute("/case-studies")({
   head: () => ({
     meta: [
-      { title: "Case Studies — Operon Systems" },
+      { title: "Case Studies" },
       {
         name: "description",
         content:
           "Selected client engagements: WatchGalore 265, Yano Eggs and Jungle Pepper.",
       },
-      { property: "og:title", content: "Case Studies — Operon Systems" },
+      { property: "og:title", content: "Case Studies" },
       {
         property: "og:description",
         content: "Selected engagements and outcomes.",
@@ -30,7 +30,7 @@ const CASES = [
     problem:
       "Sales were limited to walk-in customers at a single location, with no way to reach buyers across Malawi.",
     solution:
-      "We launched a branded online store with product catalogue, order management and integrated checkout — designed to be run by a small team.",
+      "We launched a branded online store with product catalogue, order management and integrated checkout, designed to be run by a small team.",
     outcome:
       "WatchGalore 265 now sells watches and men's essentials online, reaching customers well beyond the physical store.",
   },
@@ -45,7 +45,7 @@ const CASES = [
     solution:
       "We built a centralized operations platform connecting every branch, with live dashboards for sales, stock movement and daily performance.",
     outcome:
-      "Leadership now sees branch performance in real time and can act on the same day — not at month-end.",
+      "Leadership now sees branch performance in real time and can act on the same day, not at month-end.",
   },
   {
     sector: "Hospitality · Restaurant",
@@ -68,7 +68,7 @@ function CasesPage() {
       <PageHero
         eyebrow="Case Studies"
         title="Engagements in their own words."
-        lede="A consistent format — Problem, Solution, Outcome — across retail, FMCG and hospitality clients."
+        lede="A consistent format, problem, solution, outcome, across retail, FMCG and hospitality clients."
       />
       <section className="mx-auto max-w-[1280px] px-5 py-16 sm:px-6 sm:py-20 md:px-10 md:py-24">
         <div className="space-y-8 md:space-y-12">

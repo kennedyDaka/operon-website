@@ -14,13 +14,13 @@ import {
 export const Route = createFileRoute("/industries")({
   head: () => ({
     meta: [
-      { title: "Industries — Operon Systems" },
+      { title: "Industries" },
       {
         name: "description",
         content:
           "Industries we serve: warehousing, logistics, hospitality, fuel, poultry, retail, schools and healthcare.",
       },
-      { property: "og:title", content: "Industries — Operon Systems" },
+      { property: "og:title", content: "Industries" },
       {
         property: "og:description",
         content: "Sectors where our systems are in daily use.",
@@ -31,13 +31,13 @@ export const Route = createFileRoute("/industries")({
 });
 
 const INDUSTRIES = [
-  { icon: Warehouse, title: "Warehousing & Distribution", caption: "Inbound, outbound, stock control", image: "/industry-warehouse.jpg" },
-  { icon: Truck, title: "Logistics & Transport", caption: "Fleet, dispatch, deliveries", image: "/industry-logistics.jpg" },
-  { icon: UtensilsCrossed, title: "Hospitality & Restaurants", caption: "POS, kitchen, inventory", image: "/industry-hospitality.jpg" },
+  { icon: Warehouse, title: "Warehousing and Distribution", caption: "Inbound, outbound, stock control", image: "/industry-warehouse.jpg" },
+  { icon: Truck, title: "Logistics and Transport", caption: "Fleet, dispatch, deliveries", image: "/industry-logistics.jpg" },
+  { icon: UtensilsCrossed, title: "Hospitality and Restaurants", caption: "POS, kitchen, inventory", image: "/industry-hospitality.jpg" },
   { icon: Fuel, title: "Fuel Operations", caption: "Forecourt, depot, reconciliation", image: "/industry-fuel.jpg" },
-  { icon: Egg, title: "Poultry & Agriculture", caption: "Production, traceability, supply", image: "/industry-poultry.jpg" },
+  { icon: Egg, title: "Poultry and Agriculture", caption: "Production, traceability, supply", image: "/industry-poultry.jpg" },
   { icon: ShoppingBag, title: "Retail", caption: "Multi-branch, stock, sales", image: "/industry-retail.jpg" },
-  { icon: GraduationCap, title: "Schools & Institutions", caption: "Admissions, records, finance", image: "/industry-schools.jpg" },
+  { icon: GraduationCap, title: "Schools and Institutions", caption: "Admissions, records, finance", image: "/industry-schools.jpg" },
   { icon: Stethoscope, title: "Healthcare", caption: "Patient flow, records, billing", image: "/industry-healthcare.jpg" },
 ];
 

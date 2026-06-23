@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell, PageHero } from "@/components/site-shell";
+import { MobileSwipe } from "@/components/mobile-swipe";
 
 export const Route = createFileRoute("/why-us")({
   head: () => ({
@@ -63,6 +64,7 @@ function WhyPage() {
           ))}
         </div>
       </section>
+      <MobileSwipe currentPath="/why-us" />
     </SiteShell>
   );
 }

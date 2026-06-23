@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell, PageHero } from "@/components/site-shell";
+import { MobileSwipe } from "@/components/mobile-swipe";
 import { Boxes, Workflow, RefreshCw, Server } from "lucide-react";
 
 export const Route = createFileRoute("/services")({
@@ -78,6 +79,7 @@ function ServicesPage() {
           ))}
         </div>
       </section>
+      <MobileSwipe currentPath="/services" />
     </SiteShell>
   );
 }

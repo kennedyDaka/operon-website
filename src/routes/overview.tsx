@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell, PageHero } from "@/components/site-shell";
+import { MobileSwipe } from "@/components/mobile-swipe";
 
 export const Route = createFileRoute("/overview")({
   head: () => ({
@@ -77,6 +78,7 @@ function OverviewPage() {
           </div>
         </div>
       </section>
+      <MobileSwipe currentPath="/overview" />
     </SiteShell>
   );
 }

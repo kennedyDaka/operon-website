@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell, PageHero } from "@/components/site-shell";
+import { MobileSwipe } from "@/components/mobile-swipe";
 import {
   Warehouse,
   Truck,
@@ -76,6 +77,7 @@ function IndustriesPage() {
           ))}
         </div>
       </section>
+      <MobileSwipe currentPath="/industries" />
     </SiteShell>
   );
 }

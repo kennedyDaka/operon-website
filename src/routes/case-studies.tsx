@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell, PageHero } from "@/components/site-shell";
+import { MobileSwipe } from "@/components/mobile-swipe";
 
 export const Route = createFileRoute("/case-studies")({
   head: () => ({
@@ -117,6 +118,7 @@ function CasesPage() {
           ))}
         </div>
       </section>
+      <MobileSwipe currentPath="/case-studies" />
     </SiteShell>
   );
 }

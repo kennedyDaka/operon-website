@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { SiteShell, PageHero } from "@/components/site-shell";
+import { MobileSwipe } from "@/components/mobile-swipe";
 import {
   CheckCircle2,
   ArrowLeft,
@@ -262,6 +263,7 @@ function ContactPage() {
           </a>
         </div>
       </section>
+      <MobileSwipe currentPath="/contact" />
     </SiteShell>
   );
 }

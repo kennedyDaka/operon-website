@@ -7,7 +7,7 @@ export function SiteFooter() {
         <div className="md:col-span-2">
           <div className="flex items-center gap-3">
             <div className="rounded-sm bg-white p-2">
-              <img src="/operon-logo.svg" alt="Operon Systems" className="h-8 w-auto" />
+              <img src="/operon-logo.png" alt="Operon Systems" className="h-8 w-auto" />
             </div>
             <span className="text-sm font-semibold uppercase tracking-[0.22em]">
               Operon Systems

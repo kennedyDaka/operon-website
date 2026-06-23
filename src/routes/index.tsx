@@ -41,7 +41,7 @@ function Cover() {
         <header className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 rounded-sm bg-white px-4 py-3 shadow-[0_10px_40px_rgba(0,0,0,0.45)] ring-1 ring-white/20 sm:px-5 sm:py-3.5">
             <img
-              src="/operon-logo.svg"
+              src="/operon-logo.png"
               alt="Operon Systems"
               className="h-12 w-auto sm:h-14 md:h-16"
             />

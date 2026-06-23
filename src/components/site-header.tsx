@@ -18,7 +18,7 @@ export function SiteHeader() {
       <div className="mx-auto flex h-20 max-w-[1280px] items-center justify-between gap-3 px-5 sm:px-6 md:px-10">
         <Link to="/" className="flex items-center gap-3 min-w-0" onClick={() => setOpen(false)}>
           <span className="inline-flex items-center bg-white px-2.5 py-1.5 shadow-[0_4px_14px_rgba(0,0,0,0.25)]">
-            <img src="/operon-logo.svg" alt="Operon Systems" className="h-10 w-auto sm:h-11" />
+            <img src="/operon-logo.png" alt="Operon Systems" className="h-10 w-auto sm:h-11" />
           </span>
           <span className="hidden text-sm font-semibold uppercase tracking-[0.22em] text-white sm:inline">
             Operon Systems

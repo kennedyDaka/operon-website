@@ -85,6 +85,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
+      {
+        rel: "preload",
+        href: "/operon-logo.png",
+        as: "image",
+      },
+      {
+        rel: "preload",
+        href: "/hero-background.jpg",
+        as: "image",
+      },
     ],
   }),
   shellComponent: RootShell,

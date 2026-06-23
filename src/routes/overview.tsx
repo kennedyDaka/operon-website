@@ -72,6 +72,7 @@ function OverviewPage() {
               alt="Operon Systems"
               className="h-full min-h-[420px] w-full object-cover"
               loading="lazy"
+              decoding="async"
             />
           </div>
         </div>

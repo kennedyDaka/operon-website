@@ -82,6 +82,8 @@ function CasesPage() {
                   src={c.logo}
                   alt={`${c.client} logo`}
                   className="max-h-40 w-auto object-contain md:max-h-56"
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
               <div>

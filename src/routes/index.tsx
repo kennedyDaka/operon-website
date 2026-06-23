@@ -30,6 +30,8 @@ function Cover() {
         src="/hero-background.jpg"
         alt=""
         className="absolute inset-0 h-full w-full object-cover"
+        decoding="async"
+        fetchPriority="high"
       />
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-[#0a1424] via-[#0a1424]/85 to-[#0a1424]/60" />
@@ -42,6 +44,7 @@ function Cover() {
               src="/operon-logo.png"
               alt="Operon Systems"
               className="h-12 w-auto sm:h-14 md:h-16"
+              decoding="async"
             />
           </div>
           <div className="hidden items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-white/60 md:flex">

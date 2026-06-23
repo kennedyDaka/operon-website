@@ -62,6 +62,7 @@ function IndustriesPage() {
                   alt={title}
                   className="h-full w-full object-cover"
                   loading="lazy"
+                  decoding="async"
                 />
               </div>
               <div className="flex flex-1 flex-col gap-3 p-6">

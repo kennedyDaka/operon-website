@@ -9,22 +9,51 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SolutionsRouteImport } from './routes/solutions'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as WorkflowDigitizationRouteImport } from './routes/workflow-digitization'
+import { Route as WhyUsRouteImport } from './routes/why-us'
+import { Route as ServicesRouteImport } from './routes/services'
+import { Route as OverviewRouteImport } from './routes/overview'
+import { Route as OperationalSystemsRouteImport } from './routes/operational-systems'
+import { Route as ManagedServicesRouteImport } from './routes/managed-services'
+import { Route as LegacyModernizationRouteImport } from './routes/legacy-modernization'
 import { Route as IndustriesRouteImport } from './routes/industries'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CaseStudiesRouteImport } from './routes/case-studies'
-import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
-const SolutionsRoute = SolutionsRouteImport.update({
-  id: '/solutions',
-  path: '/solutions',
+const WorkflowDigitizationRoute = WorkflowDigitizationRouteImport.update({
+  id: '/workflow-digitization',
+  path: '/workflow-digitization',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
+const WhyUsRoute = WhyUsRouteImport.update({
+  id: '/why-us',
+  path: '/why-us',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesRoute = ServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OverviewRoute = OverviewRouteImport.update({
+  id: '/overview',
+  path: '/overview',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OperationalSystemsRoute = OperationalSystemsRouteImport.update({
+  id: '/operational-systems',
+  path: '/operational-systems',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ManagedServicesRoute = ManagedServicesRouteImport.update({
+  id: '/managed-services',
+  path: '/managed-services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegacyModernizationRoute = LegacyModernizationRouteImport.update({
+  id: '/legacy-modernization',
+  path: '/legacy-modernization',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndustriesRoute = IndustriesRouteImport.update({
@@ -42,11 +71,6 @@ const CaseStudiesRoute = CaseStudiesRouteImport.update({
   path: '/case-studies',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AboutRoute = AboutRouteImport.update({
-  id: '/about',
-  path: '/about',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -55,86 +79,149 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/case-studies': typeof CaseStudiesRoute
   '/contact': typeof ContactRoute
   '/industries': typeof IndustriesRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/solutions': typeof SolutionsRoute
+  '/legacy-modernization': typeof LegacyModernizationRoute
+  '/managed-services': typeof ManagedServicesRoute
+  '/operational-systems': typeof OperationalSystemsRoute
+  '/overview': typeof OverviewRoute
+  '/services': typeof ServicesRoute
+  '/why-us': typeof WhyUsRoute
+  '/workflow-digitization': typeof WorkflowDigitizationRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/case-studies': typeof CaseStudiesRoute
   '/contact': typeof ContactRoute
   '/industries': typeof IndustriesRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/solutions': typeof SolutionsRoute
+  '/legacy-modernization': typeof LegacyModernizationRoute
+  '/managed-services': typeof ManagedServicesRoute
+  '/operational-systems': typeof OperationalSystemsRoute
+  '/overview': typeof OverviewRoute
+  '/services': typeof ServicesRoute
+  '/why-us': typeof WhyUsRoute
+  '/workflow-digitization': typeof WorkflowDigitizationRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/case-studies': typeof CaseStudiesRoute
   '/contact': typeof ContactRoute
   '/industries': typeof IndustriesRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/solutions': typeof SolutionsRoute
+  '/legacy-modernization': typeof LegacyModernizationRoute
+  '/managed-services': typeof ManagedServicesRoute
+  '/operational-systems': typeof OperationalSystemsRoute
+  '/overview': typeof OverviewRoute
+  '/services': typeof ServicesRoute
+  '/why-us': typeof WhyUsRoute
+  '/workflow-digitization': typeof WorkflowDigitizationRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/about'
     | '/case-studies'
     | '/contact'
     | '/industries'
-    | '/sitemap.xml'
-    | '/solutions'
+    | '/legacy-modernization'
+    | '/managed-services'
+    | '/operational-systems'
+    | '/overview'
+    | '/services'
+    | '/why-us'
+    | '/workflow-digitization'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/about'
     | '/case-studies'
     | '/contact'
     | '/industries'
-    | '/sitemap.xml'
-    | '/solutions'
+    | '/legacy-modernization'
+    | '/managed-services'
+    | '/operational-systems'
+    | '/overview'
+    | '/services'
+    | '/why-us'
+    | '/workflow-digitization'
   id:
     | '__root__'
     | '/'
-    | '/about'
     | '/case-studies'
     | '/contact'
     | '/industries'
-    | '/sitemap.xml'
-    | '/solutions'
+    | '/legacy-modernization'
+    | '/managed-services'
+    | '/operational-systems'
+    | '/overview'
+    | '/services'
+    | '/why-us'
+    | '/workflow-digitization'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
   CaseStudiesRoute: typeof CaseStudiesRoute
   ContactRoute: typeof ContactRoute
   IndustriesRoute: typeof IndustriesRoute
-  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  SolutionsRoute: typeof SolutionsRoute
+  LegacyModernizationRoute: typeof LegacyModernizationRoute
+  ManagedServicesRoute: typeof ManagedServicesRoute
+  OperationalSystemsRoute: typeof OperationalSystemsRoute
+  OverviewRoute: typeof OverviewRoute
+  ServicesRoute: typeof ServicesRoute
+  WhyUsRoute: typeof WhyUsRoute
+  WorkflowDigitizationRoute: typeof WorkflowDigitizationRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/solutions': {
-      id: '/solutions'
-      path: '/solutions'
-      fullPath: '/solutions'
-      preLoaderRoute: typeof SolutionsRouteImport
+    '/workflow-digitization': {
+      id: '/workflow-digitization'
+      path: '/workflow-digitization'
+      fullPath: '/workflow-digitization'
+      preLoaderRoute: typeof WorkflowDigitizationRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
+    '/why-us': {
+      id: '/why-us'
+      path: '/why-us'
+      fullPath: '/why-us'
+      preLoaderRoute: typeof WhyUsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services': {
+      id: '/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/overview': {
+      id: '/overview'
+      path: '/overview'
+      fullPath: '/overview'
+      preLoaderRoute: typeof OverviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/operational-systems': {
+      id: '/operational-systems'
+      path: '/operational-systems'
+      fullPath: '/operational-systems'
+      preLoaderRoute: typeof OperationalSystemsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/managed-services': {
+      id: '/managed-services'
+      path: '/managed-services'
+      fullPath: '/managed-services'
+      preLoaderRoute: typeof ManagedServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legacy-modernization': {
+      id: '/legacy-modernization'
+      path: '/legacy-modernization'
+      fullPath: '/legacy-modernization'
+      preLoaderRoute: typeof LegacyModernizationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/industries': {
@@ -158,13 +245,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CaseStudiesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -177,12 +257,16 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
   CaseStudiesRoute: CaseStudiesRoute,
   ContactRoute: ContactRoute,
   IndustriesRoute: IndustriesRoute,
-  SitemapDotxmlRoute: SitemapDotxmlRoute,
-  SolutionsRoute: SolutionsRoute,
+  LegacyModernizationRoute: LegacyModernizationRoute,
+  ManagedServicesRoute: ManagedServicesRoute,
+  OperationalSystemsRoute: OperationalSystemsRoute,
+  OverviewRoute: OverviewRoute,
+  ServicesRoute: ServicesRoute,
+  WhyUsRoute: WhyUsRoute,
+  WorkflowDigitizationRoute: WorkflowDigitizationRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,593 +1,586 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { SiteShell, PageHero } from "@/components/site-shell";
 import {
-  Mail, Phone, MapPin, Linkedin, Facebook, Check, ArrowRight, ArrowLeft, MessageCircle,
-  Warehouse, Truck, Utensils, ShoppingBag, Fuel, Egg, GraduationCap, HeartPulse, Building2,
-  FileSpreadsheet, Boxes, RefreshCw, Workflow, ServerCog, Sparkles,
-  Clock3, Users, CalendarClock, Loader2, AlertCircle,
+  CheckCircle2,
+  ArrowLeft,
+  ArrowRight,
+  Phone,
+  Mail,
+  MapPin,
+  Globe,
+  Linkedin,
+  Facebook,
+  MessageCircle,
 } from "lucide-react";
-
-import sideImg from "@/assets/analytics.jpg.asset.json";
 import { submitContactForm } from "@/lib/supabase";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
       { title: "Book a Consultation — Operon Systems" },
-      { name: "description", content: "Tell us about your operations in a few quick questions. We'll come back within one business day to set up a working conversation." },
+      {
+        name: "description",
+        content:
+          "Tell us about your operations in a short guided consultation. Operon Systems will respond within one business day.",
+      },
       { property: "og:title", content: "Book a Consultation — Operon Systems" },
-      { property: "og:description", content: "A short, guided intake. No pitch — just a working conversation about your operations." },
+      {
+        property: "og:description",
+        content: "A short guided consultation to scope your project.",
+      },
     ],
   }),
   component: ContactPage,
 });
 
-type Answers = {
+const PHONE = "0882575364";
+const PHONE_INTL = "+265882575364";
+const WHATSAPP = "0993693215";
+const WHATSAPP_INTL_DIGITS = "265993693215";
+const EMAIL = "hello@operonsystems.com";
+
+type FormState = {
   industry: string;
-  challenge: string;
-  current: string;
   size: string;
+  challenge: string;
   timeline: string;
   name: string;
-  company: string;
-  role: string;
+  organization: string;
   email: string;
   phone: string;
   notes: string;
 };
 
+const INITIAL: FormState = {
+  industry: "",
+  size: "",
+  challenge: "",
+  timeline: "",
+  name: "",
+  organization: "",
+  email: "",
+  phone: "",
+  notes: "",
+};
+
 const INDUSTRIES = [
-  { icon: Warehouse, label: "Warehousing & Distribution" },
-  { icon: Truck, label: "Logistics & Transport" },
-  { icon: Utensils, label: "Hospitality & Restaurants" },
-  { icon: ShoppingBag, label: "Retail" },
-  { icon: Fuel, label: "Fuel Operations" },
-  { icon: Egg, label: "Poultry & Agriculture" },
-  { icon: GraduationCap, label: "Schools & Institutions" },
-  { icon: HeartPulse, label: "Healthcare" },
-  { icon: Building2, label: "Something else" },
+  "Logistics & Transport",
+  "Hospitality",
+  "Retail & Distribution",
+  "Manufacturing",
+  "Financial Services",
+  "Public Sector / NGO",
+  "Other",
+];
+
+const SIZES = [
+  "1 – 20 staff",
+  "21 – 100 staff",
+  "101 – 500 staff",
+  "500+ staff",
 ];
 
 const CHALLENGES = [
-  { icon: Boxes, label: "Build a new operational system", desc: "Inventory, POS, ERP, or a workflow our business depends on." },
-  { icon: Workflow, label: "Digitize manual processes", desc: "Move paperwork, approvals, and spreadsheets into one connected system." },
-  { icon: RefreshCw, label: "Replace an outdated system", desc: "Modernize legacy software and migrate existing data." },
-  { icon: ServerCog, label: "Hosting, support & maintenance", desc: "Ongoing managed services for systems already in place." },
-  { icon: Sparkles, label: "Not sure yet — we want guidance", desc: "Walk through what's possible with someone who's done it." },
+  "Paper / spreadsheet workflows",
+  "Disconnected systems",
+  "Outdated ERP or legacy software",
+  "New system from scratch",
+  "Process automation",
+  "Not sure yet — exploring",
 ];
 
-const CURRENT = [
-  { icon: FileSpreadsheet, label: "Spreadsheets and paperwork" },
-  { icon: Boxes, label: "A mix of separate tools" },
-  { icon: ServerCog, label: "An older custom system" },
-  { icon: RefreshCw, label: "Off-the-shelf software we've outgrown" },
+const TIMELINES = [
+  "Within 1 month",
+  "1 – 3 months",
+  "3 – 6 months",
+  "Just exploring",
 ];
-
-const SIZES = ["1–10", "11–50", "51–200", "200+"];
-const TIMELINES = ["As soon as possible", "Within 1–3 months", "This quarter", "Just exploring"];
-
-const STEPS = ["Industry", "Goal", "Current systems", "Team & timing", "Your details"] as const;
 
 function ContactPage() {
   const [step, setStep] = useState(0);
-  const [sent, setSent] = useState(false);
+  const [form, setForm] = useState<FormState>(INITIAL);
+  const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [a, setA] = useState<Answers>({
-    industry: "", challenge: "", current: "", size: "", timeline: "",
-    name: "", company: "", role: "", email: "", phone: "", notes: "",
-  });
 
-  const canNext = useMemo(() => {
-    if (step === 0) return !!a.industry;
-    if (step === 1) return !!a.challenge;
-    if (step === 2) return !!a.current;
-    if (step === 3) return !!a.size && !!a.timeline;
-    if (step === 4) return !!a.name && !!a.company && !!a.email;
-    return false;
-  }, [step, a]);
+  const steps = [
+    { key: "industry", label: "Industry", options: INDUSTRIES },
+    { key: "size", label: "Organization size", options: SIZES },
+    { key: "challenge", label: "Primary challenge", options: CHALLENGES },
+    { key: "timeline", label: "Timeline", options: TIMELINES },
+  ] as const;
 
-  const progress = ((step + (sent ? 1 : 0)) / STEPS.length) * 100;
+  const totalSteps = steps.length + 1;
+  const progress = ((step + 1) / totalSteps) * 100;
 
-  function set<K extends keyof Answers>(key: K, value: Answers[K]) {
-    setA((p) => ({ ...p, [key]: value }));
-  }
+  const update = (k: keyof FormState, v: string) =>
+    setForm((f) => ({ ...f, [k]: v }));
 
-  async function next() {
-    if (step < STEPS.length - 1) {
-      setStep(step + 1);
-    } else {
-      setSubmitting(true);
-      setSubmitError(null);
-      try {
-        await submitContactForm({
-          industry: a.industry,
-          challenge: a.challenge,
-          current_systems: a.current,
-          team_size: a.size,
-          timeline: a.timeline,
-          name: a.name,
-          company: a.company,
-          role: a.role,
-          email: a.email,
-          phone: a.phone,
-          notes: a.notes,
-        });
-        setSent(true);
-      } catch (error) {
-        console.error("Failed to submit form:", error);
-        setSubmitError("Something went wrong. Please try again or contact us directly.");
-      } finally {
-        setSubmitting(false);
-      }
+  const canAdvance = useMemo(() => {
+    if (step < steps.length) {
+      const k = steps[step].key as keyof FormState;
+      return Boolean(form[k]);
     }
+    return Boolean(form.name && form.email);
+  }, [step, form, steps]);
+
+  const handleSubmit = async () => {
+    if (!canAdvance) return;
+    setSubmitting(true);
+    setSubmitError(null);
+    try {
+      await submitContactForm({
+        industry: form.industry,
+        challenge: form.challenge,
+        current_systems: "",
+        team_size: form.size,
+        timeline: form.timeline,
+        name: form.name,
+        company: form.organization,
+        role: "",
+        email: form.email,
+        phone: form.phone,
+        notes: form.notes,
+      });
+      setSubmitted(true);
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (submitted) {
+    return (
+      <SiteShell>
+        <ConfirmationScreen form={form} />
+      </SiteShell>
+    );
   }
 
   return (
-    <>
-      {/* Intro */}
-      <section className="border-b border-rule bg-surface">
-        <div className="container-page py-12 sm:py-16 lg:py-20">
-          <div className="grid items-end gap-10 lg:grid-cols-12">
-            <div className="lg:col-span-8">
-              <p className="eyebrow">Book a Consultation</p>
-              <h1 className="mt-4 max-w-3xl text-4xl text-foreground sm:text-5xl lg:text-6xl">
-                Five short questions. <span className="italic text-brand">Then we talk.</span>
-              </h1>
-              <p className="mt-5 max-w-2xl text-lg text-ink-soft">
-                Tell us a little about your operations so the first conversation is useful from
-                minute one. No pitch decks, no sales script — a working session with someone who's
-                built systems like yours before.
-              </p>
-            </div>
-            <div className="lg:col-span-4 lg:text-right">
-              <div className="inline-flex items-center gap-3 rounded-full border border-rule bg-background px-4 py-2 text-xs text-ink-soft">
-                <span className="grid h-2 w-2 place-items-center"><span className="h-2 w-2 rounded-full bg-brand" /></span>
-                Replies within one business day
-              </div>
-            </div>
+    <SiteShell>
+      <PageHero
+        eyebrow="Consultation"
+        title="Let's Scope Your Project"
+        lede="Four quick questions, then your contact details. Takes under two minutes. We respond within one business day."
+      />
+
+      <section className="mx-auto max-w-[860px] px-5 py-12 sm:px-6 sm:py-16 md:px-10 md:py-20">
+        {/* Progress */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
+            <span>
+              Step {step + 1} of {totalSteps}
+            </span>
+            <span>
+              {step < steps.length ? steps[step].label : "Your Details"}
+            </span>
+          </div>
+          <div className="mt-3 h-[3px] w-full bg-slate-200">
+            <div
+              className="h-full bg-[#1f4e79] transition-all duration-300"
+              style={{ width: `${progress}%` }}
+            />
           </div>
         </div>
-      </section>
 
-      {/* Wizard */}
-      <section>
-        <div className="container-page grid gap-10 py-16 lg:grid-cols-12 lg:gap-14 lg:py-20">
-          {/* Sidebar */}
-          <aside className="lg:col-span-4">
-            <div className="sticky top-24 space-y-8">
-              <div className="overflow-hidden rounded-md border border-rule">
-                <img src={sideImg.url} alt="Operations team reviewing reporting dashboards" className="h-56 w-full object-cover" />
-                <div className="border-t border-rule bg-background p-6">
-                  <p className="text-xs uppercase tracking-widest text-ink-soft">What happens next</p>
-                  <ol className="mt-4 space-y-4 text-sm text-foreground">
-                    <Stepline n="1" title="We review your answers" desc="A real person — not a chatbot." />
-                    <Stepline n="2" title="We schedule a 30-minute call" desc="Within one business day." />
-                    <Stepline n="3" title="We map your workflows together" desc="You leave with a clear next step." />
-                  </ol>
-                </div>
-              </div>
+        <div className="border border-slate-200 bg-white p-6 shadow-[0_2px_20px_rgba(15,23,42,0.04)] sm:p-10">
+          {step < steps.length ? (
+            <ChoiceStep
+              question={questionFor(steps[step].key)}
+              options={[...steps[step].options]}
+              value={form[steps[step].key as keyof FormState]}
+              onSelect={(v) =>
+                update(steps[step].key as keyof FormState, v)
+              }
+            />
+          ) : (
+            <DetailsStep form={form} update={update} />
+          )}
 
-              <blockquote className="border-l-2 border-brand pl-5">
-                <p className="font-serif text-lg italic leading-snug text-foreground">
-                  "They listened first, then designed the system around how we already work."
-                </p>
-                <footer className="mt-3 text-xs uppercase tracking-widest text-ink-soft">
-                  Operations Director · Hospitality Group
-                </footer>
-              </blockquote>
+          {submitError && (
+            <div className="mt-4 border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+              {submitError}
             </div>
-          </aside>
+          )}
 
-          {/* Wizard panel */}
-          <div className="lg:col-span-8">
-            <div className="overflow-hidden rounded-md border border-rule bg-background">
-              {/* Progress */}
-              <div className="border-b border-rule px-6 py-5 lg:px-10">
-                <div className="flex items-center justify-between text-xs uppercase tracking-widest text-ink-soft">
-                  <span>{sent ? "Complete" : `Step ${step + 1} of ${STEPS.length}`}</span>
-                  <span>{sent ? STEPS[STEPS.length - 1] : STEPS[step]}</span>
-                </div>
-                <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-surface">
-                  <div className="h-full bg-foreground transition-all duration-500" style={{ width: `${progress}%` }} />
-                </div>
-                <ol className="mt-4 hidden grid-cols-5 gap-2 text-[11px] sm:grid">
-                  {STEPS.map((s, i) => (
-                    <li key={s} className={`flex items-center gap-2 ${i <= step || sent ? "text-foreground" : "text-ink-soft"}`}>
-                      <span className={`grid h-5 w-5 place-items-center rounded-full border ${i < step || sent ? "border-brand bg-brand text-background" : i === step ? "border-foreground text-foreground" : "border-rule"}`}>
-                        {i < step || sent ? <Check className="h-3 w-3" /> : i + 1}
-                      </span>
-                      <span className="truncate">{s}</span>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-
-              {/* Body */}
-              <div className="px-6 py-10 lg:px-10 lg:py-12">
-                {sent ? (
-                  <SentView a={a} />
-                ) : (
-                  <>
-                    {step === 0 && (
-                      <StepLayout title="Which best describes your industry?" subtitle="We've built systems across many — pick the closest fit.">
-                        <div className="grid gap-3 sm:grid-cols-2">
-                          {INDUSTRIES.map((opt) => (
-                            <OptionCard key={opt.label} icon={opt.icon} label={opt.label}
-                              selected={a.industry === opt.label}
-                              onClick={() => set("industry", opt.label)} />
-                          ))}
-                        </div>
-                      </StepLayout>
-                    )}
-
-                    {step === 1 && (
-                      <StepLayout title="What are you trying to accomplish?" subtitle="If a few apply, choose the most pressing.">
-                        <div className="grid gap-3">
-                          {CHALLENGES.map((opt) => (
-                            <OptionRow key={opt.label} icon={opt.icon} label={opt.label} desc={opt.desc}
-                              selected={a.challenge === opt.label}
-                              onClick={() => set("challenge", opt.label)} />
-                          ))}
-                        </div>
-                      </StepLayout>
-                    )}
-
-                    {step === 2 && (
-                      <StepLayout title="What are you using today?" subtitle="A rough picture is fine — we'll dig in on the call.">
-                        <div className="grid gap-3 sm:grid-cols-2">
-                          {CURRENT.map((opt) => (
-                            <OptionCard key={opt.label} icon={opt.icon} label={opt.label}
-                              selected={a.current === opt.label}
-                              onClick={() => set("current", opt.label)} />
-                          ))}
-                        </div>
-                      </StepLayout>
-                    )}
-
-                    {step === 3 && (
-                      <StepLayout title="Team size & timing" subtitle="Helps us suggest the right starting point.">
-                        <div className="space-y-8">
-                          <ChoiceGroup icon={Users} label="People in your operation">
-                            {SIZES.map((s) => (
-                              <Pill key={s} active={a.size === s} onClick={() => set("size", s)}>{s}</Pill>
-                            ))}
-                          </ChoiceGroup>
-                          <ChoiceGroup icon={CalendarClock} label="When would you like to start?">
-                            {TIMELINES.map((t) => (
-                              <Pill key={t} active={a.timeline === t} onClick={() => set("timeline", t)}>{t}</Pill>
-                            ))}
-                          </ChoiceGroup>
-                        </div>
-                      </StepLayout>
-                    )}
-
-                    {step === 4 && (
-                      <StepLayout title="Where can we reach you?" subtitle="One business day reply, from a real person.">
-                        <div className="grid gap-5">
-                          <div className="grid gap-5 sm:grid-cols-2">
-                            <Field label="Full name" value={a.name} onChange={(v) => set("name", v)} required />
-                            <Field label="Company" value={a.company} onChange={(v) => set("company", v)} required />
-                          </div>
-                          <div className="grid gap-5 sm:grid-cols-2">
-                            <Field label="Role" value={a.role} onChange={(v) => set("role", v)} placeholder="Operations Manager" />
-                            <Field label="Work email" type="email" value={a.email} onChange={(v) => set("email", v)} required />
-                          </div>
-                          <Field label="Phone (optional)" type="tel" value={a.phone} onChange={(v) => set("phone", v)} />
-                          <div>
-                            <label className="text-sm font-medium text-foreground">Anything else we should know?</label>
-                            <textarea
-                              rows={4}
-                              value={a.notes}
-                              onChange={(e) => set("notes", e.target.value)}
-                              placeholder="Optional — context, links, or a specific question."
-                              className="mt-2 w-full rounded-md border border-rule bg-background px-3 py-3 text-sm text-foreground placeholder:text-ink-soft/70 focus:border-foreground focus:outline-none"
-                            />
-                          </div>
-                          <p className="text-xs text-ink-soft">
-                            By submitting, you agree we may contact you about your enquiry. We don't share your details.
-                          </p>
-                        </div>
-                      </StepLayout>
-                    )}
-
-                    {/* Footer controls */}
-                    <div className="mt-10 flex items-center justify-between border-t border-rule pt-6">
-                      <button
-                        type="button"
-                        onClick={() => setStep(Math.max(0, step - 1))}
-                        disabled={step === 0 || submitting}
-                        className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm text-ink-soft hover:text-foreground disabled:opacity-40"
-                      >
-                        <ArrowLeft className="h-4 w-4" /> Back
-                      </button>
-                      <div className="flex flex-col items-end gap-2">
-                        {submitError && (
-                          <div className="flex items-center gap-2 text-sm text-red-600">
-                            <AlertCircle className="h-4 w-4" />
-                            <span>{submitError}</span>
-                          </div>
-                        )}
-                        <button
-                          type="button"
-                          onClick={next}
-                          disabled={!canNext || submitting}
-                          className="inline-flex items-center gap-2 rounded-md bg-foreground px-5 py-3 text-sm font-medium text-background hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
-                        >
-                          {submitting ? (
-                            <>
-                              <Loader2 className="h-4 w-4 animate-spin" /> Submitting...
-                            </>
-                          ) : (
-                            <>
-                              {step === STEPS.length - 1 ? "Submit" : "Continue"} <ArrowRight className="h-4 w-4" />
-                            </>
-                          )}
-                        </button>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-
-            {/* Direct contact */}
-            <div className="mt-10 grid gap-6 rounded-md border border-rule bg-surface p-6 sm:grid-cols-4 lg:p-8">
-              <DirectItem icon={Mail} label="Email" value="hello@operonsystems.com" href="mailto:hello@operonsystems.com" />
-              <DirectItem icon={Phone} label="Phone" value="+265 882 575 364" href="tel:+265882575364" />
-              <DirectItem icon={MessageCircle} label="WhatsApp" value="+265 993 693 215" href="https://wa.me/265993693215" />
-              <DirectItem icon={MapPin} label="Office" value="Lilongwe, Malawi" />
-              <div className="sm:col-span-4 flex items-center justify-between border-t border-rule pt-5">
-
-                <p className="text-xs uppercase tracking-widest text-ink-soft">Follow</p>
-                <div className="flex gap-2">
-                  <a href="https://www.linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn"
-                    className="grid h-9 w-9 place-items-center rounded-md border border-rule bg-background hover:bg-surface">
-                    <Linkedin className="h-4 w-4" strokeWidth={1.5} />
-                  </a>
-                  <a href="https://www.facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook"
-                    className="grid h-9 w-9 place-items-center rounded-md border border-rule bg-background hover:bg-surface">
-                    <Facebook className="h-4 w-4" strokeWidth={1.5} />
-                  </a>
-                </div>
-              </div>
-            </div>
+          {/* Nav */}
+          <div className="mt-10 flex flex-col-reverse gap-3 border-t border-slate-200 pt-6 sm:flex-row sm:items-center sm:justify-between">
+            <button
+              type="button"
+              onClick={() => setStep((s) => Math.max(0, s - 1))}
+              disabled={step === 0}
+              className="inline-flex items-center justify-center gap-2 px-4 py-3 text-[12px] font-semibold uppercase tracking-[0.18em] text-slate-600 transition-colors hover:text-[#0a1424] disabled:opacity-30"
+            >
+              <ArrowLeft className="h-4 w-4" /> Back
+            </button>
+            {step < totalSteps - 1 ? (
+              <button
+                type="button"
+                onClick={() => canAdvance && setStep((s) => s + 1)}
+                disabled={!canAdvance}
+                className="inline-flex items-center justify-center gap-2 bg-[#1f4e79] px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.18em] text-white transition-colors hover:bg-[#16395a] disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Continue <ArrowRight className="h-4 w-4" />
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleSubmit}
+                disabled={!canAdvance || submitting}
+                className="inline-flex items-center justify-center gap-2 bg-[#1f4e79] px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.18em] text-white transition-colors hover:bg-[#16395a] disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                {submitting ? "Submitting..." : "Submit Consultation"} <ArrowRight className="h-4 w-4" />
+              </button>
+            )}
           </div>
         </div>
+
+        {/* Alternate channels */}
+        <div className="mt-10 grid gap-3 text-sm sm:grid-cols-3">
+          <a
+            href={`tel:${PHONE_INTL}`}
+            className="flex items-center gap-3 border border-slate-200 bg-white p-4 text-[#0a1424] transition-colors hover:border-[#1f4e79]"
+          >
+            <Phone className="h-4 w-4 text-[#1f4e79]" /> {PHONE}
+          </a>
+          <a
+            href={`https://wa.me/${WHATSAPP_INTL_DIGITS}`}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-3 border border-slate-200 bg-white p-4 text-[#0a1424] transition-colors hover:border-[#1f4e79]"
+          >
+            <MessageCircle className="h-4 w-4 text-[#1f4e79]" /> WhatsApp {WHATSAPP}
+          </a>
+          <a
+            href={`mailto:${EMAIL}`}
+            className="flex items-center gap-3 border border-slate-200 bg-white p-4 text-[#0a1424] transition-colors hover:border-[#1f4e79]"
+          >
+            <Mail className="h-4 w-4 text-[#1f4e79]" /> {EMAIL}
+          </a>
+        </div>
       </section>
-    </>
+    </SiteShell>
   );
 }
 
-/* ---------- bits ---------- */
-
-function Stepline({ n, title, desc }: { n: string; title: string; desc: string }) {
-  return (
-    <li className="flex items-start gap-3">
-      <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full border border-rule font-serif text-xs text-foreground">{n}</span>
-      <div>
-        <p className="font-medium text-foreground">{title}</p>
-        <p className="text-xs text-ink-soft">{desc}</p>
-      </div>
-    </li>
-  );
+function questionFor(key: string) {
+  switch (key) {
+    case "industry":
+      return "Which industry best describes your organization?";
+    case "size":
+      return "How large is your organization?";
+    case "challenge":
+      return "What is the primary challenge you want to solve?";
+    case "timeline":
+      return "When would you like to begin?";
+    default:
+      return "";
+  }
 }
 
-function StepLayout({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) {
+function ChoiceStep({
+  question,
+  options,
+  value,
+  onSelect,
+}: {
+  question: string;
+  options: string[];
+  value: string;
+  onSelect: (v: string) => void;
+}) {
   return (
     <div>
-      <h2 className="text-2xl text-foreground sm:text-3xl">{title}</h2>
-      <p className="mt-2 text-sm text-ink-soft">{subtitle}</p>
-      <div className="mt-8">{children}</div>
+      <h2 className="font-serif text-2xl font-light leading-snug text-[#0a1424] sm:text-3xl">
+        {question}
+      </h2>
+      <div className="mt-6 grid gap-2.5">
+        {options.map((opt) => {
+          const active = value === opt;
+          return (
+            <button
+              key={opt}
+              type="button"
+              onClick={() => onSelect(opt)}
+              className={`flex items-center justify-between border px-4 py-4 text-left text-sm transition-colors sm:px-5 ${
+                active
+                  ? "border-[#1f4e79] bg-[#1f4e79]/5 text-[#0a1424]"
+                  : "border-slate-200 bg-white text-slate-700 hover:border-[#1f4e79]/50"
+              }`}
+            >
+              <span>{opt}</span>
+              {active ? (
+                <CheckCircle2 className="h-4 w-4 text-[#1f4e79]" />
+              ) : (
+                <span className="h-4 w-4 rounded-full border border-slate-300" />
+              )}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }
 
-function OptionCard({ icon: Icon, label, selected, onClick }: { icon: any; label: string; selected: boolean; onClick: () => void }) {
-  return (
-    <button type="button" onClick={onClick}
-      className={`group flex items-center gap-3 rounded-md border p-4 text-left transition-all ${
-        selected ? "border-foreground bg-surface ring-1 ring-foreground" : "border-rule bg-background hover:border-ink-soft"
-      }`}
-    >
-      <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-md ${selected ? "bg-foreground text-background" : "bg-surface text-brand"}`}>
-        <Icon className="h-4 w-4" strokeWidth={1.5} />
-      </span>
-      <span className="text-sm font-medium text-foreground">{label}</span>
-      {selected && <Check className="ml-auto h-4 w-4 text-foreground" />}
-    </button>
-  );
-}
-
-function OptionRow({ icon: Icon, label, desc, selected, onClick }: { icon: any; label: string; desc: string; selected: boolean; onClick: () => void }) {
-  return (
-    <button type="button" onClick={onClick}
-      className={`flex items-start gap-4 rounded-md border p-5 text-left transition-all ${
-        selected ? "border-foreground bg-surface ring-1 ring-foreground" : "border-rule bg-background hover:border-ink-soft"
-      }`}
-    >
-      <span className={`mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-md ${selected ? "bg-foreground text-background" : "bg-surface text-brand"}`}>
-        <Icon className="h-4 w-4" strokeWidth={1.5} />
-      </span>
-      <div className="flex-1">
-        <p className="text-sm font-medium text-foreground">{label}</p>
-        <p className="mt-1 text-sm text-ink-soft">{desc}</p>
-      </div>
-      <span className={`mt-0.5 grid h-5 w-5 place-items-center rounded-full border ${selected ? "border-foreground bg-foreground text-background" : "border-rule"}`}>
-        {selected && <Check className="h-3 w-3" />}
-      </span>
-    </button>
-  );
-}
-
-function ChoiceGroup({ icon: Icon, label, children }: { icon: any; label: string; children: React.ReactNode }) {
+function DetailsStep({
+  form,
+  update,
+}: {
+  form: FormState;
+  update: (k: keyof FormState, v: string) => void;
+}) {
   return (
     <div>
-      <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-        <Icon className="h-4 w-4 text-brand" strokeWidth={1.5} />
-        {label}
+      <h2 className="font-serif text-2xl font-light leading-snug text-[#0a1424] sm:text-3xl">
+        How can we reach you?
+      </h2>
+      <p className="mt-2 text-sm text-slate-600">
+        We'll prepare a short scoping note based on your answers and respond
+        within one business day.
+      </p>
+      <div className="mt-6 grid gap-4 sm:grid-cols-2">
+        <Field
+          label="Full name *"
+          value={form.name}
+          onChange={(v) => update("name", v)}
+        />
+        <Field
+          label="Organization"
+          value={form.organization}
+          onChange={(v) => update("organization", v)}
+        />
+        <Field
+          label="Email *"
+          type="email"
+          value={form.email}
+          onChange={(v) => update("email", v)}
+        />
+        <Field
+          label="Phone"
+          type="tel"
+          value={form.phone}
+          onChange={(v) => update("phone", v)}
+        />
       </div>
-      <div className="mt-3 flex flex-wrap gap-2">{children}</div>
-    </div>
-  );
-}
-
-function Pill({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
-  return (
-    <button type="button" onClick={onClick}
-      className={`rounded-full border px-4 py-2 text-sm transition-colors ${
-        active ? "border-foreground bg-foreground text-background" : "border-rule bg-background text-foreground hover:bg-surface"
-      }`}
-    >
-      {children}
-    </button>
-  );
-}
-
-function Field({ label, value, onChange, type = "text", required, placeholder }:
-  { label: string; value: string; onChange: (v: string) => void; type?: string; required?: boolean; placeholder?: string }) {
-  return (
-    <div>
-      <label className="text-sm font-medium text-foreground">
-        {label}{required && <span className="text-brand"> *</span>}
-      </label>
-      <input
-        type={type}
-        value={value}
-        required={required}
-        placeholder={placeholder}
-        onChange={(e) => onChange(e.target.value)}
-        className="mt-2 h-11 w-full rounded-md border border-rule bg-background px-3 text-sm text-foreground placeholder:text-ink-soft/70 focus:border-foreground focus:outline-none"
+      <Field
+        label="Anything else we should know?"
+        multiline
+        value={form.notes}
+        onChange={(v) => update("notes", v)}
       />
     </div>
   );
 }
 
-function DirectItem({ icon: Icon, label, value, href }: { icon: any; label: string; value: string; href?: string }) {
-  const inner = (
-    <div className="flex items-start gap-3">
-      <Icon className="mt-0.5 h-4 w-4 text-brand" strokeWidth={1.5} />
-      <div>
-        <p className="text-xs uppercase tracking-widest text-ink-soft">{label}</p>
-        <p className="mt-1 text-sm text-foreground">{value}</p>
-      </div>
-    </div>
+function Field({
+  label,
+  value,
+  onChange,
+  type = "text",
+  multiline = false,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  type?: string;
+  multiline?: boolean;
+}) {
+  const cls =
+    "mt-2 w-full border border-slate-200 bg-white px-4 py-3 text-sm text-[#0a1424] outline-none transition-colors focus:border-[#1f4e79]";
+  return (
+    <label className="block">
+      <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
+        {label}
+      </span>
+      {multiline ? (
+        <textarea
+          rows={4}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className={cls}
+        />
+      ) : (
+        <input
+          type={type}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className={cls}
+        />
+      )}
+    </label>
   );
-  return href ? <a href={href} className="block hover:opacity-80">{inner}</a> : <div>{inner}</div>;
 }
 
-function SentView({ a }: { a: Answers }) {
-  const firstName = a.name.split(" ")[0] || "there";
+function buildWhatsAppMessage(f: FormState) {
+  const lines = [
+    "Hello Operon Systems,",
+    "",
+    "I just submitted a consultation request:",
+    `• Name: ${f.name}`,
+    f.organization ? `• Organization: ${f.organization}` : "",
+    `• Email: ${f.email}`,
+    f.phone ? `• Phone: ${f.phone}` : "",
+    `• Industry: ${f.industry}`,
+    `• Size: ${f.size}`,
+    `• Challenge: ${f.challenge}`,
+    `• Timeline: ${f.timeline}`,
+    f.notes ? `• Notes: ${f.notes}` : "",
+    "",
+    "Looking forward to your response.",
+  ].filter(Boolean);
+  return lines.join("\n");
+}
 
-  const waMessage = [
-    `Hi Operon Systems — I just submitted a consultation request.`,
-    ``,
-    `Name: ${a.name}`,
-    a.role ? `Role: ${a.role}` : null,
-    `Company: ${a.company}`,
-    `Email: ${a.email}`,
-    a.phone ? `Phone: ${a.phone}` : null,
-    ``,
-    `Industry: ${a.industry}`,
-    `Goal: ${a.challenge}`,
-    `Current systems: ${a.current}`,
-    `Team size: ${a.size}`,
-    `Timeline: ${a.timeline}`,
-    a.notes ? `` : null,
-    a.notes ? `Notes: ${a.notes}` : null,
-  ].filter(Boolean).join("\n");
-  const waHref = `https://wa.me/265993693215?text=${encodeURIComponent(waMessage)}`;
+function ConfirmationScreen({ form }: { form: FormState }) {
+  const waUrl = `https://wa.me/${WHATSAPP_INTL_DIGITS}?text=${encodeURIComponent(
+    buildWhatsAppMessage(form),
+  )}`;
+
+  const summary: Array<[string, string]> = [
+    ["Industry", form.industry],
+    ["Size", form.size],
+    ["Challenge", form.challenge],
+    ["Timeline", form.timeline],
+    ["Name", form.name],
+    ["Organization", form.organization || "—"],
+    ["Email", form.email],
+    ["Phone", form.phone || "—"],
+  ];
 
   return (
-    <div>
-      <div className="rounded-md border border-brand/20 bg-brand-soft px-5 py-6 sm:px-8 sm:py-8">
-        <div className="flex items-start gap-3 sm:gap-4">
-          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand text-background sm:h-12 sm:w-12">
-            <Check className="h-4 w-4 sm:h-5 sm:w-5" strokeWidth={2.5} />
-          </div>
-          <div className="min-w-0">
-            <p className="text-[11px] font-semibold uppercase tracking-widest text-brand">Request received</p>
-            <h2 className="mt-2 text-xl text-foreground sm:text-3xl">Thank you, {firstName}.</h2>
-            <p className="mt-3 text-sm text-foreground/80 sm:text-base">
-              Your consultation request is in. We'll review the details and reply to{" "}
-              <span className="font-medium text-foreground break-words">{a.email}</span> within one business day.
-            </p>
-          </div>
+    <section className="mx-auto max-w-[860px] px-5 py-12 sm:px-6 sm:py-20 md:px-10">
+      <div className="flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.3em] text-[#1f4e79]">
+        <span className="h-px w-10 bg-[#1f4e79]" />
+        Consultation Received
+      </div>
+      <h1 className="mt-5 font-serif text-3xl font-light leading-tight text-[#0a1424] sm:text-5xl">
+        Thank you, {form.name.split(" ")[0] || "there"}.
+      </h1>
+      <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-600">
+        Your consultation request has been recorded. A member of the Operon
+        Systems team will review your answers and respond within one business
+        day at <span className="text-[#0a1424]">{form.email}</span>.
+      </p>
+
+      <div className="mt-10 border border-slate-200 bg-white">
+        <div className="border-b border-slate-200 bg-slate-50 px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-600 sm:px-6">
+          Summary
         </div>
-      </div>
-
-      <div className="mt-6 sm:mt-8">
-        <p className="text-xs font-semibold uppercase tracking-widest text-ink-soft">What happens next</p>
-        <ol className="mt-4 grid gap-3 sm:grid-cols-3 sm:gap-4">
-          <NextStep n="1" title="We review your answers" desc="A real person reads through your context — no auto-replies." />
-          <NextStep n="2" title="We schedule a 30-min call" desc="You'll get an email with two or three time options." />
-          <NextStep n="3" title="We map your workflows" desc="You leave the call with a clear, costed next step." />
-        </ol>
-      </div>
-
-      <div className="mt-6 rounded-md border border-rule bg-surface p-5 sm:mt-8 sm:p-6">
-        <p className="text-xs font-semibold uppercase tracking-widest text-ink-soft">Your summary</p>
-        <dl className="mt-4 grid gap-4 sm:grid-cols-2">
-          <Summary label="Industry" value={a.industry} />
-          <Summary label="Goal" value={a.challenge} />
-          <Summary label="Current systems" value={a.current} />
-          <Summary label="Team size" value={a.size} />
-          <Summary label="Timeline" value={a.timeline} />
-          <Summary label="Company" value={a.company} />
+        <dl className="divide-y divide-slate-200">
+          {summary.map(([k, v]) => (
+            <div
+              key={k}
+              className="grid grid-cols-[120px_1fr] gap-4 px-5 py-3 text-sm sm:grid-cols-[180px_1fr] sm:px-6"
+            >
+              <dt className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                {k}
+              </dt>
+              <dd className="text-[#0a1424]">{v}</dd>
+            </div>
+          ))}
+          {form.notes ? (
+            <div className="grid grid-cols-[120px_1fr] gap-4 px-5 py-3 text-sm sm:grid-cols-[180px_1fr] sm:px-6">
+              <dt className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                Notes
+              </dt>
+              <dd className="text-[#0a1424]">{form.notes}</dd>
+            </div>
+          ) : null}
         </dl>
       </div>
 
-      <div className="mt-6 rounded-md border border-accent-warm/30 bg-accent-soft p-5 sm:mt-8 sm:p-6">
-        <div className="flex items-start gap-3">
-          <MessageCircle className="mt-0.5 h-5 w-5 shrink-0 text-accent-warm" strokeWidth={1.75} />
-          <div className="min-w-0">
-            <p className="text-sm font-semibold text-foreground">Want a faster reply?</p>
-            <p className="mt-1 text-sm text-ink-soft">
-              Send your summary straight to us on WhatsApp — we'll pick it up sooner.
-            </p>
-            <a
-              href={waHref}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-md bg-foreground px-4 py-3 text-sm font-medium text-background hover:opacity-90 sm:w-auto"
-            >
-              <MessageCircle className="h-4 w-4" strokeWidth={1.75} /> Continue on WhatsApp
-            </a>
-          </div>
-        </div>
+      <div className="mt-10">
+        <h2 className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#1f4e79]">
+          What happens next
+        </h2>
+        <ol className="mt-5 space-y-4">
+          {[
+            "We review your answers and prepare a short scoping note.",
+            "We email you within one business day to schedule a 30-minute call.",
+            "Together we agree on scope, timeline and next steps — no obligation.",
+          ].map((t, i) => (
+            <li key={i} className="flex gap-4 text-sm text-slate-700">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center border border-[#1f4e79] text-[11px] font-semibold text-[#1f4e79]">
+                {i + 1}
+              </span>
+              <span className="pt-1">{t}</span>
+            </li>
+          ))}
+        </ol>
       </div>
 
-      <div className="mt-6 flex flex-col items-start justify-between gap-4 border-t border-rule pt-6 sm:mt-8 sm:flex-row sm:items-center">
-        <div className="flex items-center gap-2 text-sm text-ink-soft">
-          <Clock3 className="h-4 w-4 text-brand" strokeWidth={1.5} />
-          Typical reply time: within one business day.
-        </div>
+      <div className="mt-10 border border-[#1f4e79]/30 bg-[#0a1424] p-6 text-white sm:p-8">
+        <h3 className="font-serif text-xl font-light sm:text-2xl">
+          Want a faster response?
+        </h3>
+        <p className="mt-2 text-sm text-white/75">
+          Send your summary to us on WhatsApp — the message is prefilled with
+          your answers.
+        </p>
         <a
-          href="mailto:hello@operonsystems.com"
-          className="inline-flex w-full items-center justify-center gap-2 rounded-md border border-rule bg-background px-4 py-2.5 text-sm font-medium text-foreground hover:bg-surface sm:w-auto"
+          href={waUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-5 inline-flex items-center gap-3 bg-white px-6 py-3.5 text-[12px] font-semibold uppercase tracking-[0.2em] text-[#0a1424] transition-colors hover:bg-[#9fc1de]"
         >
-          <Mail className="h-4 w-4" strokeWidth={1.5} /> Email us directly
+          <MessageCircle className="h-4 w-4" />
+          Send via WhatsApp ({WHATSAPP})
         </a>
       </div>
-    </div>
+
+      <div className="mt-10 grid gap-3 text-sm sm:grid-cols-2">
+        <Channel icon={Phone} label="Call" value={PHONE} href={`tel:${PHONE_INTL}`} />
+        <Channel icon={Mail} label="Email" value={EMAIL} href={`mailto:${EMAIL}`} />
+        <Channel icon={Globe} label="Website" value="www.operonsystems.com" />
+        <Channel icon={MapPin} label="Location" value="Blantyre CBD, Malawi" />
+        <Channel icon={Linkedin} label="LinkedIn" value="linkedin.com/company/operon-systems" />
+        <Channel icon={Facebook} label="Facebook" value="facebook.com/operonsystems" />
+      </div>
+
+      <div className="mt-10">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.2em] text-[#1f4e79] hover:text-[#16395a]"
+        >
+          <ArrowLeft className="h-4 w-4" /> Back to home
+        </Link>
+      </div>
+    </section>
   );
 }
 
-function NextStep({ n, title, desc }: { n: string; title: string; desc: string }) {
-  return (
-    <li className="rounded-md border border-rule bg-background p-5">
-      <span className="grid h-8 w-8 place-items-center rounded-full bg-brand text-background font-serif text-sm">{n}</span>
-      <p className="mt-3 text-sm font-semibold text-foreground">{title}</p>
-      <p className="mt-1 text-sm text-ink-soft">{desc}</p>
-    </li>
-  );
-}
-
-function Summary({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <dt className="text-xs uppercase tracking-widest text-ink-soft">{label}</dt>
-      <dd className="mt-1 text-sm text-foreground">{value || "—"}</dd>
+function Channel({
+  icon: Icon,
+  label,
+  value,
+  href,
+}: {
+  icon: typeof Phone;
+  label: string;
+  value: string;
+  href?: string;
+}) {
+  const inner = (
+    <div className="flex items-start gap-3 border border-slate-200 bg-white p-4">
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center border border-[#1f4e79]/20 bg-[#1f4e79]/5 text-[#1f4e79]">
+        <Icon className="h-4 w-4" strokeWidth={1.5} />
+      </div>
+      <div className="min-w-0">
+        <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
+          {label}
+        </div>
+        <div className="mt-0.5 truncate text-sm text-[#0a1424]">{value}</div>
+      </div>
     </div>
+  );
+  return href ? (
+    <a href={href} className="block transition-colors hover:[&_div:first-child]:border-[#1f4e79]">
+      {inner}
+    </a>
+  ) : (
+    inner
   );
 }

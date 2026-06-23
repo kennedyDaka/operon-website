@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell, PageHero } from "@/components/site-shell";
-import { MobileSwipe } from "@/components/mobile-swipe";
+import { SwipeZone, SwipeIndicator } from "@/components/mobile-swipe";
 import { Boxes, Workflow, RefreshCw, Server } from "lucide-react";
 
 export const Route = createFileRoute("/services")({
@@ -52,6 +52,7 @@ const SERVICES = [
 function ServicesPage() {
   return (
     <SiteShell>
+      <SwipeZone currentPath="/services">
       <PageHero
         eyebrow="Services"
         title="Four practice areas, one operating philosophy."
@@ -79,7 +80,9 @@ function ServicesPage() {
           ))}
         </div>
       </section>
+      </SwipeZone>
       <MobileSwipe currentPath="/services" />
+      <SwipeIndicator currentPath="/services" />
     </SiteShell>
   );
 }

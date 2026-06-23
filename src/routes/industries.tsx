@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell, PageHero } from "@/components/site-shell";
-import { MobileSwipe } from "@/components/mobile-swipe";
+import { SwipeZone, SwipeIndicator } from "@/components/mobile-swipe";
 import {
   Warehouse,
   Truck,
@@ -45,6 +45,7 @@ const INDUSTRIES = [
 function IndustriesPage() {
   return (
     <SiteShell>
+      <SwipeZone currentPath="/industries">
       <PageHero
         eyebrow="Industries"
         title="Sectors where our systems are in daily use."
@@ -77,7 +78,9 @@ function IndustriesPage() {
           ))}
         </div>
       </section>
+      </SwipeZone>
       <MobileSwipe currentPath="/industries" />
+      <SwipeIndicator currentPath="/industries" />
     </SiteShell>
   );
 }

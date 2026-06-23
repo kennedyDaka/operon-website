@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { SiteShell, PageHero } from "@/components/site-shell";
-import { MobileSwipe } from "@/components/mobile-swipe";
+import { SwipeZone, SwipeIndicator } from "@/components/mobile-swipe";
 import {
   CheckCircle2,
   ArrowLeft,
@@ -162,6 +162,7 @@ function ContactPage() {
 
   return (
     <SiteShell>
+      <SwipeZone currentPath="/contact">
       <PageHero
         eyebrow="Consultation"
         title="Let's Scope Your Project"
@@ -264,6 +265,8 @@ function ContactPage() {
         </div>
       </section>
       <MobileSwipe currentPath="/contact" />
+      <SwipeIndicator currentPath="/contact" />
+      </SwipeZone>
     </SiteShell>
   );
 }

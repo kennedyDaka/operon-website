@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell, PageHero } from "@/components/site-shell";
-import { MobileSwipe } from "@/components/mobile-swipe";
+import { SwipeZone, SwipeIndicator } from "@/components/mobile-swipe";
 
 export const Route = createFileRoute("/why-us")({
   head: () => ({
@@ -47,6 +47,7 @@ const PILLARS = [
 function WhyPage() {
   return (
     <SiteShell>
+      <SwipeZone currentPath="/why-us">
       <PageHero
         eyebrow="Why Operon Systems"
         title="A consulting engagement shaped like an operating partnership."
@@ -64,7 +65,9 @@ function WhyPage() {
           ))}
         </div>
       </section>
+      </SwipeZone>
       <MobileSwipe currentPath="/why-us" />
+      <SwipeIndicator currentPath="/why-us" />
     </SiteShell>
   );
 }

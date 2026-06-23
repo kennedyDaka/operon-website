@@ -1,4 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useState, useRef, useEffect, useCallback } from "react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -22,7 +23,54 @@ export const Route = createFileRoute("/")({
   component: Cover,
 });
 
+const PAGES = [
+  { href: "/", label: "Home" },
+  { href: "/overview", label: "Overview" },
+  { href: "/services", label: "Services" },
+  { href: "/industries", label: "Industries" },
+  { href: "/why-us", label: "Why Us" },
+  { href: "/case-studies", label: "Case Studies" },
+  { href: "/contact", label: "Contact" },
+];
+
 function Cover() {
+  const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(0);
+  const [showArrow, setShowArrow] = useState(true);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = useCallback(() => {
+    const diff = touchStartX.current - touchEndX.current;
+    const threshold = 80;
+
+    if (Math.abs(diff) > threshold) {
+      if (diff > 0 && currentPage < PAGES.length - 1) {
+        // Swipe left - go next
+        setCurrentPage((p) => p + 1);
+        navigate({ to: PAGES[currentPage + 1].href });
+      } else if (diff < 0 && currentPage > 0) {
+        // Swipe right - go prev
+        setCurrentPage((p) => p - 1);
+        navigate({ to: PAGES[currentPage - 1].href });
+      }
+    }
+  }, [currentPage, navigate]);
+
+  useEffect(() => {
+    setShowArrow(true);
+    const timer = setTimeout(() => setShowArrow(false), 4000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <main className="relative min-h-dvh w-full overflow-hidden bg-[#0a1424] text-white">
       {/* Background image */}
@@ -36,7 +84,12 @@ function Cover() {
       {/* Dark overlay - stronger on mobile */}
       <div className="absolute inset-0 bg-[#0a1424]/70 sm:bg-gradient-to-r sm:from-[#0a1424] sm:via-[#0a1424]/85 sm:to-[#0a1424]/60" />
 
-      <div className="relative z-10 mx-auto flex min-h-dvh w-full max-w-[1440px] flex-col px-5 py-6 sm:px-8 sm:py-10 md:px-16 md:py-14 lg:px-24 lg:py-16">
+      <div
+        className="relative z-10 mx-auto flex min-h-dvh w-full max-w-[1440px] flex-col px-5 py-6 sm:px-8 sm:py-10 md:px-16 md:py-14 lg:px-24 lg:py-16"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         {/* Top bar */}
         <header className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 rounded-sm bg-white px-3 py-2.5 shadow-[0_10px_40px_rgba(0,0,0,0.45)] ring-1 ring-white/20 sm:px-5 sm:py-3.5">
@@ -94,7 +147,7 @@ function Cover() {
               to="/contact"
               className="inline-flex items-center justify-center gap-3 bg-[#1f4e79] px-6 py-3.5 text-[12px] font-semibold uppercase tracking-[0.22em] text-white transition-colors hover:bg-[#16395a]"
             >
-              Book a Consultation →
+              Book a Consultation
             </Link>
             <Link
               to="/overview"
@@ -124,6 +177,34 @@ function Cover() {
           </div>
         </footer>
       </div>
+
+      {/* Mobile swipe indicator */}
+      {showArrow && (
+        <div className="absolute bottom-8 left-0 right-0 z-20 flex flex-col items-center gap-2 sm:hidden">
+          <div className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-white/80 backdrop-blur-sm">
+            <span>Swipe to explore</span>
+            <svg
+              className="h-4 w-4 animate-pulse"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+          <div className="flex gap-1.5">
+            {PAGES.map((_, i) => (
+              <div
+                key={i}
+                className={`h-1 rounded-full transition-all ${
+                  i === currentPage ? "w-4 bg-white" : "w-1 bg-white/40"
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </main>
   );
 }

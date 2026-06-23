@@ -33,8 +33,8 @@ function Cover() {
         decoding="async"
         fetchPriority="high"
       />
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#0a1424] via-[#0a1424]/85 to-[#0a1424]/60" />
+      {/* Dark overlay - stronger on mobile */}
+      <div className="absolute inset-0 bg-[#0a1424]/70 sm:bg-gradient-to-r sm:from-[#0a1424] sm:via-[#0a1424]/85 sm:to-[#0a1424]/60" />
 
       <div className="relative z-10 mx-auto flex min-h-dvh w-full max-w-[1440px] flex-col px-5 py-6 sm:px-8 sm:py-10 md:px-16 md:py-14 lg:px-24 lg:py-16">
         {/* Top bar */}

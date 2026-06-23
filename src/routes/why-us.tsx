@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell, PageHero } from "@/components/site-shell";
-import { SwipeZone, SwipeIndicator } from "@/components/mobile-swipe";
+import { useEffect } from "react";
+import { SwipeIndicator, useSwipeNav } from "@/components/mobile-swipe";
 
 export const Route = createFileRoute("/why-us")({
   head: () => ({
@@ -45,9 +46,18 @@ const PILLARS = [
 ];
 
 function WhyPage() {
+  const swipe = useSwipeNav("/why-us");
+  useEffect(() => {
+    document.addEventListener("touchstart", swipe.onTouchStart);
+    document.addEventListener("touchend", swipe.onTouchEnd);
+    return () => {
+      document.removeEventListener("touchstart", swipe.onTouchStart);
+      document.removeEventListener("touchend", swipe.onTouchEnd);
+    };
+  }, [swipe.onTouchStart, swipe.onTouchEnd]);
+
   return (
     <SiteShell>
-      <SwipeZone currentPath="/why-us">
       <PageHero
         eyebrow="Why Operon Systems"
         title="A consulting engagement shaped like an operating partnership."
@@ -65,8 +75,6 @@ function WhyPage() {
           ))}
         </div>
       </section>
-      </SwipeZone>
-      <MobileSwipe currentPath="/why-us" />
       <SwipeIndicator currentPath="/why-us" />
     </SiteShell>
   );

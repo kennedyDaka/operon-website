@@ -1,5 +1,4 @@
 import { useNavigate } from "@tanstack/react-router";
-import { useRef, useCallback, type ReactNode } from "react";
 
 const SWIPE_PAGES = [
   { href: "/overview", label: "Overview" },
@@ -10,45 +9,28 @@ const SWIPE_PAGES = [
   { href: "/contact", label: "Contact" },
 ];
 
-export function SwipeZone({
-  currentPath,
-  children,
-}: {
-  currentPath: string;
-  children: ReactNode;
-}) {
+export function useSwipeNav(currentPath: string) {
   const navigate = useNavigate();
-  const touchStartX = useRef(0);
-  const touchStartY = useRef(0);
-
   const currentIndex = SWIPE_PAGES.findIndex((p) => p.href === currentPath);
   const isLastPage = currentIndex === SWIPE_PAGES.length - 1;
 
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-    touchStartY.current = e.touches[0].clientY;
-  }, []);
+  let startX = 0;
+  let startY = 0;
 
-  const handleTouchEnd = useCallback(
-    (e: React.TouchEvent) => {
-      const diffX = touchStartX.current - e.changedTouches[0].clientX;
-      const diffY = Math.abs(touchStartY.current - e.changedTouches[0].clientY);
-      if (diffX > 60 && diffY < 60 && !isLastPage) {
-        navigate({ to: SWIPE_PAGES[currentIndex + 1].href });
-      }
-    },
-    [currentIndex, isLastPage, navigate],
-  );
+  const onTouchStart = (e: TouchEvent) => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  };
 
-  return (
-    <div
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-      className="min-h-[70vh]"
-    >
-      {children}
-    </div>
-  );
+  const onTouchEnd = (e: TouchEvent) => {
+    const diffX = startX - e.changedTouches[0].clientX;
+    const diffY = Math.abs(startY - e.changedTouches[0].clientY);
+    if (diffX > 60 && diffY < 60 && !isLastPage && currentIndex !== -1) {
+      navigate({ to: SWIPE_PAGES[currentIndex + 1].href });
+    }
+  };
+
+  return { onTouchStart, onTouchEnd, currentIndex, isLastPage };
 }
 
 export function SwipeIndicator({

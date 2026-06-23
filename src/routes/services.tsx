@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell, PageHero } from "@/components/site-shell";
-import { SwipeZone, SwipeIndicator } from "@/components/mobile-swipe";
+import { useEffect } from "react";
+import { SwipeIndicator, useSwipeNav } from "@/components/mobile-swipe";
 import { Boxes, Workflow, RefreshCw, Server } from "lucide-react";
 
 export const Route = createFileRoute("/services")({
@@ -50,9 +51,18 @@ const SERVICES = [
 ];
 
 function ServicesPage() {
+  const swipe = useSwipeNav("/services");
+  useEffect(() => {
+    document.addEventListener("touchstart", swipe.onTouchStart);
+    document.addEventListener("touchend", swipe.onTouchEnd);
+    return () => {
+      document.removeEventListener("touchstart", swipe.onTouchStart);
+      document.removeEventListener("touchend", swipe.onTouchEnd);
+    };
+  }, [swipe.onTouchStart, swipe.onTouchEnd]);
+
   return (
     <SiteShell>
-      <SwipeZone currentPath="/services">
       <PageHero
         eyebrow="Services"
         title="Four practice areas, one operating philosophy."
@@ -80,8 +90,6 @@ function ServicesPage() {
           ))}
         </div>
       </section>
-      </SwipeZone>
-      <MobileSwipe currentPath="/services" />
       <SwipeIndicator currentPath="/services" />
     </SiteShell>
   );

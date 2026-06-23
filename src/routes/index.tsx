@@ -1,5 +1,4 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import heroAsset from "@/assets/hero-operations.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -26,15 +25,8 @@ export const Route = createFileRoute("/")({
 function Cover() {
   return (
     <main className="relative min-h-screen w-full overflow-hidden bg-[#0a1424] text-white">
-      <img
-        src={heroAsset.url}
-        alt="Global operations: shipping containers at port"
-        className="absolute inset-0 h-full w-full object-cover"
-        loading="eager"
-      />
-      {/* Stronger, single, consistent overlay for readability */}
-      <div className="absolute inset-0 bg-[#0a1424]/85" />
-      <div className="absolute inset-0 bg-gradient-to-r from-[#0a1424] via-[#0a1424]/85 to-[#0a1424]/60" />
+      {/* Background overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#0a1424] via-[#0a1424]/90 to-[#0a1424]/70" />
 
       <div className="relative z-10 mx-auto flex min-h-screen max-w-[1440px] flex-col px-5 py-6 sm:px-8 sm:py-10 md:px-16 md:py-14 lg:px-24 lg:py-16">
         {/* Top bar — logo (more prominent) */}

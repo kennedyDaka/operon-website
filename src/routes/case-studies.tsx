@@ -1,8 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell, PageHero } from "@/components/site-shell";
-import watchgalore from "@/assets/watchgalore265.asset.json";
-import yano from "@/assets/yano-eggs.asset.json";
-import junglePepper from "@/assets/jungle-pepper.asset.json";
 
 export const Route = createFileRoute("/case-studies")({
   head: () => ({
@@ -27,7 +24,7 @@ const CASES = [
   {
     sector: "Retail · E-commerce",
     client: "WatchGalore 265",
-    logo: watchgalore.url,
+    logo: "/client-watchgalore265.jpg",
     bg: "bg-white",
     title: "An online store built for reach beyond the storefront.",
     problem:
@@ -40,7 +37,7 @@ const CASES = [
   {
     sector: "FMCG · Multi-branch Operations",
     client: "Yano Eggs",
-    logo: yano.url,
+    logo: "/client-yano-eggs.png",
     bg: "bg-white",
     title: "A centralized system across branches with real-time reporting.",
     problem:
@@ -53,7 +50,7 @@ const CASES = [
   {
     sector: "Hospitality · Restaurant",
     client: "Jungle Pepper",
-    logo: junglePepper.url,
+    logo: "/client-jungle-pepper.png",
     bg: "bg-white",
     title: "Real-time inventory, sales, expenses and restaurant ordering.",
     problem:

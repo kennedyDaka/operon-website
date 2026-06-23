@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell, PageHero } from "@/components/site-shell";
-import { useEffect } from "react";
-import { SwipeIndicator, useSwipeNav } from "@/components/mobile-swipe";
+import { SwipeZone } from "@/components/mobile-swipe";
 
 export const Route = createFileRoute("/overview")({
   head: () => ({
@@ -23,18 +22,9 @@ export const Route = createFileRoute("/overview")({
 });
 
 function OverviewPage() {
-  const swipe = useSwipeNav("/overview");
-  useEffect(() => {
-    document.addEventListener("touchstart", swipe.onTouchStart);
-    document.addEventListener("touchend", swipe.onTouchEnd);
-    return () => {
-      document.removeEventListener("touchstart", swipe.onTouchStart);
-      document.removeEventListener("touchend", swipe.onTouchEnd);
-    };
-  }, [swipe.onTouchStart, swipe.onTouchEnd]);
-
   return (
     <SiteShell>
+      <SwipeZone currentPath="/overview">
       <PageHero
         eyebrow="Company Overview"
         title="Who We Are"
@@ -89,7 +79,7 @@ function OverviewPage() {
           </div>
         </div>
       </section>
-      <SwipeIndicator currentPath="/overview" />
+      </SwipeZone>
     </SiteShell>
   );
 }

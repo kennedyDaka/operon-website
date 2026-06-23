@@ -1,8 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { SiteShell, PageHero } from "@/components/site-shell";
-import { useEffect } from "react";
-import { SwipeIndicator, useSwipeNav } from "@/components/mobile-swipe";
+import { SwipeZone } from "@/components/mobile-swipe";
 import {
   CheckCircle2,
   ArrowLeft,
@@ -106,16 +105,6 @@ function ContactPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const swipe = useSwipeNav("/contact");
-  useEffect(() => {
-    document.addEventListener("touchstart", swipe.onTouchStart);
-    document.addEventListener("touchend", swipe.onTouchEnd);
-    return () => {
-      document.removeEventListener("touchstart", swipe.onTouchStart);
-      document.removeEventListener("touchend", swipe.onTouchEnd);
-    };
-  }, [swipe.onTouchStart, swipe.onTouchEnd]);
-
   const steps = [
     { key: "industry", label: "Industry", options: INDUSTRIES },
     { key: "size", label: "Organization size", options: SIZES },
@@ -173,6 +162,7 @@ function ContactPage() {
 
   return (
     <SiteShell>
+      <SwipeZone currentPath="/contact">
       <PageHero
         eyebrow="Consultation"
         title="Let's Scope Your Project"
@@ -274,7 +264,7 @@ function ContactPage() {
           </a>
         </div>
       </section>
-      <SwipeIndicator currentPath="/contact" />
+      </SwipeZone>
     </SiteShell>
   );
 }

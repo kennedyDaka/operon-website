@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell, PageHero } from "@/components/site-shell";
-import { useEffect } from "react";
-import { SwipeIndicator, useSwipeNav } from "@/components/mobile-swipe";
+import { SwipeZone } from "@/components/mobile-swipe";
 
 export const Route = createFileRoute("/case-studies")({
   head: () => ({
@@ -65,18 +64,9 @@ const CASES = [
 ];
 
 function CasesPage() {
-  const swipe = useSwipeNav("/case-studies");
-  useEffect(() => {
-    document.addEventListener("touchstart", swipe.onTouchStart);
-    document.addEventListener("touchend", swipe.onTouchEnd);
-    return () => {
-      document.removeEventListener("touchstart", swipe.onTouchStart);
-      document.removeEventListener("touchend", swipe.onTouchEnd);
-    };
-  }, [swipe.onTouchStart, swipe.onTouchEnd]);
-
   return (
     <SiteShell>
+      <SwipeZone currentPath="/case-studies">
       <PageHero
         eyebrow="Case Studies"
         title="Engagements in their own words."
@@ -129,7 +119,7 @@ function CasesPage() {
           ))}
         </div>
       </section>
-      <SwipeIndicator currentPath="/case-studies" />
+      </SwipeZone>
     </SiteShell>
   );
 }

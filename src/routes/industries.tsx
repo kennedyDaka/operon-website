@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell, PageHero } from "@/components/site-shell";
-import { useEffect } from "react";
-import { SwipeIndicator, useSwipeNav } from "@/components/mobile-swipe";
+import { SwipeZone } from "@/components/mobile-swipe";
 import {
   Warehouse,
   Truck,
@@ -44,18 +43,9 @@ const INDUSTRIES = [
 ];
 
 function IndustriesPage() {
-  const swipe = useSwipeNav("/industries");
-  useEffect(() => {
-    document.addEventListener("touchstart", swipe.onTouchStart);
-    document.addEventListener("touchend", swipe.onTouchEnd);
-    return () => {
-      document.removeEventListener("touchstart", swipe.onTouchStart);
-      document.removeEventListener("touchend", swipe.onTouchEnd);
-    };
-  }, [swipe.onTouchStart, swipe.onTouchEnd]);
-
   return (
     <SiteShell>
+      <SwipeZone currentPath="/industries">
       <PageHero
         eyebrow="Industries"
         title="Sectors where our systems are in daily use."
@@ -88,7 +78,7 @@ function IndustriesPage() {
           ))}
         </div>
       </section>
-      <SwipeIndicator currentPath="/industries" />
+      </SwipeZone>
     </SiteShell>
   );
 }
